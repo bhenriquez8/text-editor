@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -44,6 +46,18 @@ public class TextEditorController {
 
     @FXML
     void openMenuItemSelected(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        File fileSelected = fileChooser.showOpenDialog(null);
+
+        if (fileSelected != null) {
+            try {
+                Scanner scanner = new Scanner(fileSelected);
+                while (scanner.hasNext())
+                    textArea.appendText(scanner.next() + "\n");
+            } catch (FileNotFoundException e) {
+                System.err.println("File failed to open");
+            }
+        }
 
     }
 
