@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -46,19 +48,25 @@ public class TextEditorController {
 
     @FXML
     void openMenuItemSelected(ActionEvent event) {
+        // TODO: optimize opening a file.
         FileChooser fileChooser = new FileChooser();
         File fileSelected = fileChooser.showOpenDialog(null);
 
         if (fileSelected != null) {
             try {
-                Scanner scanner = new Scanner(fileSelected);
-                while (scanner.hasNext())
-                    textArea.appendText(scanner.next() + "\n");
+                FileReader fReader = new FileReader(fileSelected);
+                BufferedReader bufferedReader = new BufferedReader(fReader);
+                String line;
+                while ((line = bufferedReader.readLine()) != null)
+                    textArea.appendText(line + "\n");
+
+                fReader.close();
             } catch (FileNotFoundException e) {
                 System.err.println("File failed to open");
+            } catch (IOException e) {
+                System.err.println("File not found");
             }
         }
-
     }
 
     @FXML
@@ -92,6 +100,11 @@ public class TextEditorController {
                 System.err.println("Failed to write to file");
             }
         }
+    }
+
+    public void initialize() {
+        // TODO: initiazlie File objects here for better
+        // code readability
     }
 
 }
