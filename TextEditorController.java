@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -13,10 +15,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.FileChooser;
 import javafx.scene.Node;
 
 public class TextEditorController {
+
+    boolean isChanged = false;
+    boolean isOpened = false;
 
     @FXML
     private MenuBar menuBar;
@@ -61,6 +69,8 @@ public class TextEditorController {
                     textArea.appendText(line + "\n");
 
                 fReader.close();
+
+                isOpened = true;
             } catch (FileNotFoundException e) {
                 System.err.println("File failed to open");
             } catch (IOException e) {
@@ -105,6 +115,20 @@ public class TextEditorController {
     public void initialize() {
         // TODO: initiazlie File objects here for better
         // code readability
+        textArea.textProperty().addListener(
+            new ChangeListener<String>() {
+                @Override
+                public void changed(final ObservableValue<? extends
+                String> observable, String ov, String nv) {
+                    isChanged = true;
+                }
+            }
+        );
+
+        exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W,
+                    KeyCombination.CONTROL_DOWN));
+        saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
+                    KeyCombination.CONTROL_DOWN));
     }
 
 }

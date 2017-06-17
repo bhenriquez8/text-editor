@@ -19,4 +19,10 @@ public class TextEditor extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    // TODO: add a dialog before closing window to ask to save file
+    @Override
+    public void stop() {
+        System.out.println("Stop");
+    }
 }
