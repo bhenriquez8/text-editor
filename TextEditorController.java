@@ -23,8 +23,8 @@ import javafx.scene.Node;
 
 public class TextEditorController {
 
-    boolean isChanged = false;
-    boolean isOpened = false;
+    public static boolean isChanged = false;
+    public static boolean isOpened = false;
 
     @FXML
     private MenuBar menuBar;
