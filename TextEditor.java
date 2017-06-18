@@ -28,22 +28,8 @@ public class TextEditor extends Application {
     // TODO: add a dialog before closing window to ask to save file
     @Override
     public void stop() {
-        if (TextEditorController.isChanged &&
-            TextEditorController.isOpened) {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Unsaved Changes");
-            alert.setContentText("Close without saving?");
-
-            ButtonType save = new ButtonType("Save");
-            ButtonType cancel = new ButtonType("Cancel",
-                ButtonData.CANCEL_CLOSE);
-
-            alert.getButtonTypes().setAll(save, cancel);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == save) {
-                System.out.println("File would be changed here");
-            }
+        if (TextEditorController.isChanged) {
+            TextEditorController.alertDialog();
         }
     }
 }

@@ -12,6 +12,10 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -20,11 +24,11 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.FileChooser;
 import javafx.scene.Node;
+import java.util.Optional;
 
 public class TextEditorController {
 
     public static boolean isChanged = false;
-    public static boolean isOpened = false;
 
     @FXML
     private MenuBar menuBar;
@@ -51,7 +55,11 @@ public class TextEditorController {
 
     @FXML
     void newMenuItemSelected(ActionEvent event) {
-
+        if (this.isSavedFile()) {
+            textArea.clear();
+        } else {
+            alertDialog();
+        }
     }
 
     @FXML
@@ -69,8 +77,6 @@ public class TextEditorController {
                     textArea.appendText(line + "\n");
 
                 fReader.close();
-
-                isOpened = true;
             } catch (FileNotFoundException e) {
                 System.err.println("File failed to open");
             } catch (IOException e) {
@@ -81,15 +87,14 @@ public class TextEditorController {
 
     @FXML
     void saveMenuItemSelected(ActionEvent event) {
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-
+        //Stage stage = (Stage) menuBar.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
         FileChooser.ExtensionFilter extFilter =
             new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showSaveDialog(stage);
+        File file = fileChooser.showSaveDialog(null);
 
         if (file != null) {
             saveToFile(file);
@@ -99,17 +104,15 @@ public class TextEditorController {
     public void saveToFile(File file) {
         String content = textArea.getText();
 
-        if ("".equals(content)) {
-            System.out.println("Emptry TextArea");
-        } else {
-            try {
-                FileWriter fW = new FileWriter(file);
-                fW.write(content);
-                fW.close();
-            } catch (IOException ex) {
-                System.err.println("Failed to write to file");
-            }
+        try {
+            FileWriter fW = new FileWriter(file);
+            fW.write(content);
+            fW.close();
+        } catch (IOException ex) {
+            System.err.println("Failed to write to file");
         }
+
+        isChanged = false;
     }
 
     public void initialize() {
@@ -126,9 +129,33 @@ public class TextEditorController {
         );
 
         exitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.W,
-                    KeyCombination.CONTROL_DOWN));
+            KeyCombination.CONTROL_DOWN));
+        newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N,
+            KeyCombination.CONTROL_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
-                    KeyCombination.CONTROL_DOWN));
+            KeyCombination.CONTROL_DOWN));
+    }
+
+    public static void alertDialog() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Unsaved Changes");
+        alert.setHeaderText(null);
+        alert.setContentText("Close without saving?");
+
+        ButtonType save = new ButtonType("Save");
+        ButtonType cancel = new ButtonType("Cancel",
+            ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(save, cancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == save) {
+            System.out.println("File would be changed here");
+        }
+    }
+
+    public boolean isSavedFile() {
+        return isChanged ? false : true;
     }
 
 }
