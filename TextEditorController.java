@@ -150,7 +150,7 @@ public class TextEditorController {
             KeyCombination.CONTROL_DOWN));
     }
 
-    public static void alertDialog() {
+    public void alertDialog() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Unsaved Changes");
         alert.setHeaderText(null);
@@ -164,6 +164,7 @@ public class TextEditorController {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == save) {
+            saveMenuItemSelected(null);
         }
     }
 
