@@ -28,6 +28,8 @@ import java.util.Optional;
 
 public class TextEditorController {
 
+    public File file = null;
+
     public static boolean isChanged = false;
 
     @FXML
@@ -38,6 +40,9 @@ public class TextEditorController {
 
     @FXML
     private MenuItem openMenuItem;
+
+    @FXML
+    private MenuItem saveAsMenuItem;
 
     @FXML
     private MenuItem saveMenuItem;
@@ -57,6 +62,8 @@ public class TextEditorController {
     void newMenuItemSelected(ActionEvent event) {
         if (this.isSavedFile()) {
             textArea.clear();
+            file = null;
+            isChanged = false;
         } else {
             alertDialog();
         }
@@ -66,11 +73,11 @@ public class TextEditorController {
     void openMenuItemSelected(ActionEvent event) {
         // TODO: optimize opening a file.
         FileChooser fileChooser = new FileChooser();
-        File fileSelected = fileChooser.showOpenDialog(null);
+        file = fileChooser.showOpenDialog(null);
 
-        if (fileSelected != null) {
+        if (file != null) {
             try {
-                FileReader fReader = new FileReader(fileSelected);
+                FileReader fReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fReader);
                 String line;
                 while ((line = bufferedReader.readLine()) != null)
@@ -86,7 +93,7 @@ public class TextEditorController {
     }
 
     @FXML
-    void saveMenuItemSelected(ActionEvent event) {
+    void saveAsMenuItemSelected(ActionEvent event) {
         //Stage stage = (Stage) menuBar.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
 
@@ -94,14 +101,23 @@ public class TextEditorController {
             new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
-        File file = fileChooser.showSaveDialog(null);
+        file = fileChooser.showSaveDialog(null);
 
         if (file != null) {
             saveToFile(file);
         }
     }
 
-    public void saveToFile(File file) {
+    @FXML
+    void saveMenuItemSelected(ActionEvent event) {
+        if (file != null) {
+            saveToFile(file);
+        } else {
+            saveAsMenuItemSelected(event);
+        }
+    }
+
+    private void saveToFile(File file) {
         String content = textArea.getText();
 
         try {
@@ -116,8 +132,6 @@ public class TextEditorController {
     }
 
     public void initialize() {
-        // TODO: initiazlie File objects here for better
-        // code readability
         textArea.textProperty().addListener(
             new ChangeListener<String>() {
                 @Override
@@ -144,13 +158,12 @@ public class TextEditorController {
 
         ButtonType save = new ButtonType("Save");
         ButtonType cancel = new ButtonType("Cancel",
-            ButtonData.CANCEL_CLOSE);
+                ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(save, cancel);
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == save) {
-            System.out.println("File would be changed here");
         }
     }
 
