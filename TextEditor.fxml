@@ -16,6 +16,7 @@
                   <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#newMenuItemSelected" text="New" />
                   <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#openMenuItemSelected" text="Open" />
                   <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveMenuItemSelected" text="Save" />
+                  <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" onAction="#saveAsMenuItemSelected" text="Save As" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exitMenuItemSelected" text="Exit" />
                </items>
