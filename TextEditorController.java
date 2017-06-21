@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.application.Platform;
+import javafx.print.PrinterJob;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.fxml.FXML;
@@ -40,6 +41,9 @@ public class TextEditorController {
 
     @FXML
     private MenuItem openMenuItem;
+
+    @FXML
+    private MenuItem printMenuItem;
 
     @FXML
     private MenuItem saveAsMenuItem;
@@ -88,6 +92,20 @@ public class TextEditorController {
                 System.err.println("File failed to open");
             } catch (IOException e) {
                 System.err.println("File not found");
+            }
+        }
+    }
+
+    @FXML 
+    void printMenuItemSelected(ActionEvent event) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null) {
+            job.showPrintDialog((Stage)menuBar.getScene().getWindow());
+            System.out.println("It detected services");
+            boolean success = job.printPage(textArea);
+            if (success) {
+                System.out.println("It was successful?");
+                job.endJob();
             }
         }
     }
@@ -146,6 +164,8 @@ public class TextEditorController {
             KeyCombination.CONTROL_DOWN));
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N,
             KeyCombination.CONTROL_DOWN));
+        printMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.P,
+            KeyCombination.CONTROL_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
             KeyCombination.CONTROL_DOWN));
     }
@@ -156,7 +176,8 @@ public class TextEditorController {
         alert.setHeaderText(null);
         alert.setContentText("Close without saving?");
 
-        ButtonType save = new ButtonType("Save");
+        ButtonType save = new ButtonType(
+            file != null && file.exists() ? "Save" : "Save As");
         ButtonType cancel = new ButtonType("Cancel",
                 ButtonData.CANCEL_CLOSE);
 
@@ -171,6 +192,5 @@ public class TextEditorController {
     public boolean isSavedFile() {
         return isChanged ? false : true;
     }
-
 }
 
