@@ -93,6 +93,7 @@ public class TextEditorController {
             } catch (IOException e) {
                 System.err.println("File not found");
             }
+            isChanged = false;
         }
     }
 
