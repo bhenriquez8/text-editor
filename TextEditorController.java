@@ -76,6 +76,8 @@ public class TextEditorController {
     @FXML
     void openMenuItemSelected(ActionEvent event) {
         // TODO: optimize opening a file.
+        textArea.clear();
+
         FileChooser fileChooser = new FileChooser();
         file = fileChooser.showOpenDialog(null);
 
@@ -101,11 +103,9 @@ public class TextEditorController {
     void printMenuItemSelected(ActionEvent event) {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job != null) {
-            job.showPrintDialog((Stage)menuBar.getScene().getWindow());
-            System.out.println("It detected services");
-            boolean success = job.printPage(textArea);
-            if (success) {
-                System.out.println("It was successful?");
+            boolean sendToPrint = job.showPrintDialog(null);
+            if (sendToPrint) {
+                job.printPage(textArea);
                 job.endJob();
             }
         }
