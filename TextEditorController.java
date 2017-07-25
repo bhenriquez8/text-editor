@@ -99,7 +99,7 @@ public class TextEditorController {
         }
     }
 
-    @FXML 
+    @FXML
     void printMenuItemSelected(ActionEvent event) {
         PrinterJob job = PrinterJob.createPrinterJob();
         if (job != null) {
@@ -169,6 +169,8 @@ public class TextEditorController {
             KeyCombination.CONTROL_DOWN));
         saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
             KeyCombination.CONTROL_DOWN));
+        saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S,
+            KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN));
     }
 
     public void alertDialog() {
